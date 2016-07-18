@@ -44,32 +44,38 @@
         </head>
         <body>
        
-        <form id="memForm" action="./memberAddAction.jsp" method="post"> 
+        <form id="memForm" action="<%=request.getContextPath()%>/member/memberAddAction.jsp" method="post"> 
         	<div>
-        		<label>MEMBER_ID : </label>
+        		<label for="">MEMBER_ID : </label>
         		<input id="memberId" name="memberId" type="text"/>
         	</div>
+        	
         	<div>
         		<label>MEMBER_PW : </label>
         		<input id="memberPw" name="memberPw" type="password"/>
         	</div>
+        	
         	<div>
                 MEMBER_NAME :
                 <input id="memberName" name="memberName" type="text"/>
             </div>
+            
             <div>
                 MEMBER_Sex :
-                <input  type="radio"  class="memberSex" name="memberSex"/>남
-                <input  type="radio"  class="memberSex" name="memberSex"/>여
+                <input  type="radio"  class="memberSex" name="memberSex" value="남자"/>남
+                <input  type="radio"  class="memberSex" name="memberSex" value="여자"/>여
             </div>
-            <div>
+            
+            <div>            
                 MEMBER_Age :
                 <input id="memberAge" name="memberAge" type="text"/>
             </div>
+            
             <div>
                 MEMBER_Address :
-                <input id="memberAddress" name="memberAddres" type="text"/>
+                <input id="memberAddresss" name="memberAddress" type="text"/>
             </div>
+            
         	<div>
         		<input id="memBtn" type="button" value="입력"/>
         	</div>

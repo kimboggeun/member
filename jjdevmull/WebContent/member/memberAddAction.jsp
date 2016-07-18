@@ -17,28 +17,42 @@
 	int memberAge = Integer.parseInt(request.getParameter("memberAge"));
 	String memberAddress = request.getParameter("memberAddress");
 	
+	System.out.println(memberId+"memberId");
+	System.out.println(memberPw+"memberPw");
+	System.out.println(memberName+"memberName");
+	System.out.println(memberSex+"memberSex");
+	System.out.println(memberAge+"memberAge");
+	System.out.println(memberAddress+"memberAddresss");
+	
 	
 	String driver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://localhost:3306/jjdevmall?";
+	String url = "jdbc:mysql://localhost:3306/jjdevmall?useUnicode=true&characterEncoding=utf-8";
 	String dbUser = "root";
 	String dbPw = "java0000";
 	
-	Class.forName(driver);
-	Connection conn = DriverManager.getConnection(url, dbUser, dbPw);
-	PreparedStatement delStmt = null;
+	Connection conn = null;
+	PreparedStatement stmt1 = null;
 	PreparedStatement addrInsStmt = null;
+	ResultSet rs = null;
 	
 	try{    
-        String sql1 = "INSERT INTO member(member_id, member_pw, member_name, member_sex, member_age) VALUES(?,?,?,?,?)";
-        conn.setAutoCommit(false);
-        PreparedStatement stmt1 = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
+		
+		Class.forName(driver);
+		conn = DriverManager.getConnection(url, dbUser, dbPw);
+   		conn.setAutoCommit(false);
+   		
+   		String sql1 = "INSERT INTO member(member_id, member_pw, member_name, member_sex, member_age) VALUES(?,?,?,?,?)";
+        
+        
+        stmt1 = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
         stmt1.setString(1, memberId);
         stmt1.setString(2, memberPw);
         stmt1.setString(3, memberName);
         stmt1.setString(4, memberSex);
         stmt1.setInt(5, memberAge);
         int insertRs = stmt1.executeUpdate();
-        ResultSet rs = stmt1.getGeneratedKeys();
+        
+        rs = stmt1.getGeneratedKeys();
         
         int lastKey = 0;
         if(rs.next()){
@@ -48,7 +62,7 @@
         }
         if(insertRs>0){
         	
-        	String addrInsSql = "insert into from address(member_no, member_address) values (?)";
+        	String addrInsSql = "insert into address(member_no, member_address) values(?,?)";
         	addrInsStmt = conn.prepareStatement(addrInsSql);
         	addrInsStmt.setInt(1, lastKey);
         	addrInsStmt.setString(2, memberAddress);
@@ -59,5 +73,16 @@
         }catch(Exception e) {
     		conn.rollback(); //바로앞 커리까지 롤백된다.
     		e.printStackTrace();
+    	}finally{
+    		if(rs != null) try{rs.close();} catch(SQLException ex){}
+    		if(stmt1 != null) try{stmt1.close();} catch(SQLException ex){}
+    		if(addrInsStmt != null) try{addrInsStmt.close();} catch(SQLException ex){}
+    		if(conn != null) try{conn.close();} catch(SQLException ex){}
+    		
     	}
+	
+	
+	
         %>
+        
+        
